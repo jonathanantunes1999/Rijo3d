@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const SECOES = ['inicio', 'galeria', 'sobre', 'encomendas', 'contactos'];
+const SECOES = ['inicio', 'pecas', 'sobre', 'encomendas', 'contactos'];
 
 test('página tem as 5 secções e navegação', async ({ page }) => {
   await page.goto('/');
@@ -27,12 +27,12 @@ for (const largura of [320, 375, 768, 1280]) {
   });
 }
 
-test('hero tem h1 único e botões para #galeria e #encomendas', async ({ page }) => {
+test('hero tem h1 único e botões para #pecas e #encomendas', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('h1')).toHaveCount(1);
   await expect(page.locator('#inicio h1')).toBeVisible();
   await expect(page.locator('#inicio a.btn[href="#encomendas"]')).toBeVisible();
-  await expect(page.locator('#inicio a.btn[href="#galeria"]')).toBeVisible();
+  await expect(page.locator('#inicio a.btn[href="#pecas"]')).toBeVisible();
 });
 
 test('menu em mobile abre e fecha com aria-expanded', async ({ page }) => {

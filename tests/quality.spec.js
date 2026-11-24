@@ -25,20 +25,6 @@ test('cabeçalhos em ordem: um h1 e h2 por secção', async ({ page }) => {
   expect(niveis.filter((n) => n === 'H2').length).toBeGreaterThanOrEqual(4);
 });
 
-for (const largura of [320, 375, 768, 1280]) {
-  test(`lightbox aberto a ${largura}px sem scroll horizontal`, async ({ page }) => {
-    await page.setViewportSize({ width: largura, height: 700 });
-    await page.goto('/');
-    await page.locator('#galeria figure button').first().click();
-    await expect(page.locator('dialog.lightbox')).toBeVisible();
-    const { scroll, inner } = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, inner: window.innerWidth }));
-    expect(scroll).toBeLessThanOrEqual(inner);
-    const caixa = await page.locator('dialog.lightbox').boundingBox();
-    expect(caixa.x).toBeGreaterThanOrEqual(0);
-    expect(caixa.x + caixa.width).toBeLessThanOrEqual(largura);
-  });
-}
-
 test('navegação por teclado: todos os controlos recebem foco visível', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto('/');

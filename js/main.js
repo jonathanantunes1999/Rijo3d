@@ -1,7 +1,7 @@
-import { GALERIA } from '../data/galeria.js';
-import { renderGaleria } from './gallery.js';
+import { PECAS } from '../data/pecas.js';
+import { renderPecas } from './pecas.js';
 
-renderGaleria(document.querySelector('#galeria .galeria__alvo'), GALERIA);
+renderPecas(document.querySelector('#pecas .pecas__alvo'), PECAS);
 
 const toggle = document.querySelector('.menu-toggle');
 const menu = document.getElementById('menu-principal');
