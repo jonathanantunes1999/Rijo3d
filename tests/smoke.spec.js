@@ -109,3 +109,26 @@ test('contraste AA nos pares de cores principais', async ({ page }) => {
     expect(razao(cores[fg], cores[bg]), `${fg} sobre ${bg}`).toBeGreaterThanOrEqual(4.5);
   }
 });
+
+test('contactos: cinco canais com ícone, WhatsApp em destaque e toque confortável', async ({ page }) => {
+  await page.goto('/');
+  const canais = page.locator('#contactos a.contacto');
+  await expect(canais).toHaveCount(5);
+  await expect(canais.first()).toHaveAttribute('href', /^https:\/\/wa\.me\//);
+  await expect(canais.first()).toHaveClass(/contacto--principal/);
+  for (let i = 0; i < 5; i++) {
+    await expect(canais.nth(i).locator('svg[aria-hidden="true"]').first()).toBeAttached();
+    expect((await canais.nth(i).boundingBox()).height).toBeGreaterThanOrEqual(44);
+    expect((await canais.nth(i).innerText()).trim().length).toBeGreaterThan(3);
+  }
+  for (const sel of ['a[href^="https://www.instagram.com/"]', 'a[href^="https://www.etsy.com/"]']) {
+    await expect(page.locator(`#contactos ${sel}`)).toHaveAttribute('target', '_blank');
+    await expect(page.locator(`#contactos ${sel}`)).toHaveAttribute('rel', /noopener/);
+  }
+});
+
+test('contactos: introdução com título e texto de apoio', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#contactos h2')).toHaveText('Fala connosco');
+  await expect(page.locator('#contactos .contactos__intro p').last()).toContainText('peça à medida');
+});
