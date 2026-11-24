@@ -21,7 +21,7 @@ export function iniciarPalco(raiz, pecas) {
   const reduzir = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const ponteiroFino = matchMedia('(pointer: fine)').matches;
   let indice = 0;
-  let pausado = reduzir;
+  const pausado = reduzir;
   let suspenso = false;
   let temporizador;
 
@@ -52,8 +52,6 @@ export function iniciarPalco(raiz, pecas) {
   controlos.className = 'palco__controlos';
   const anterior = botao('palco__anterior', 'Peça anterior', '‹');
   const seguinte = botao('palco__seguinte', 'Peça seguinte', '›');
-  const pausa = botao('palco__pausa', 'Pausar rotação automática', '');
-  pausa.setAttribute('aria-pressed', String(pausado));
   const pontos = document.createElement('div');
   pontos.className = 'palco__pontos';
   const botoesPonto = pecas.map((peca, i) => {
@@ -62,7 +60,7 @@ export function iniciarPalco(raiz, pecas) {
     pontos.append(p);
     return p;
   });
-  controlos.append(anterior, pontos, pausa, seguinte);
+  controlos.append(anterior, pontos, seguinte);
   palco.replaceChildren(palcoInterno, controlos);
 
   function ir(novo) {
@@ -92,12 +90,6 @@ export function iniciarPalco(raiz, pecas) {
 
   anterior.addEventListener('click', () => { ir(indice - 1); agendar(); });
   seguinte.addEventListener('click', () => { ir(indice + 1); agendar(); });
-  pausa.addEventListener('click', () => {
-    pausado = !pausado;
-    pausa.setAttribute('aria-pressed', String(pausado));
-    pausa.setAttribute('aria-label', pausado ? 'Retomar rotação automática' : 'Pausar rotação automática');
-    agendar();
-  });
   palco.addEventListener('pointerenter', () => { suspenso = true; agendar(); });
   palco.addEventListener('pointerleave', () => { suspenso = false; palco.style.removeProperty('--rx'); palco.style.removeProperty('--ry'); agendar(); });
   palco.addEventListener('focusin', () => { suspenso = true; agendar(); });

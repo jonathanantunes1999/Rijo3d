@@ -269,14 +269,12 @@ h2 { margin: 0 0 var(--espaco-4); font: 700 clamp(1.8rem, 5vw, 2.6rem) / 1.1 var
 @keyframes linha { 0% { bottom: 0; opacity: 1; } 90% { opacity: 1; } 100% { bottom: calc(100% - 3px); opacity: 0; } }
 
 .palco__controlos { display: flex; align-items: center; justify-content: center; gap: var(--espaco-3); margin-top: var(--espaco-3); }
-.palco__anterior, .palco__seguinte, .palco__pausa {
+.palco__anterior, .palco__seguinte {
   width: 44px; height: 44px; border: 1px solid var(--cor-borda); border-radius: 999px;
   background: color-mix(in srgb, var(--cor-superficie) 80%, transparent); color: var(--cor-texto);
   font-size: 1.4rem; line-height: 1; cursor: pointer; transition: border-color 0.2s ease, background-color 0.2s ease;
 }
-.palco__anterior:hover, .palco__seguinte:hover, .palco__pausa:hover { border-color: var(--cor-destaque); }
-.palco__pausa::before { content: "❚❚"; font-size: 0.7rem; letter-spacing: -0.1em; }
-.palco__pausa[aria-pressed="true"]::before { content: "▶"; font-size: 0.8rem; letter-spacing: 0; }
+.palco__anterior:hover, .palco__seguinte:hover { border-color: var(--cor-destaque); }
 .palco__pontos { display: flex; gap: var(--espaco-1); }
 .palco__ponto { position: relative; width: 28px; height: 44px; border: 0; background: none; cursor: pointer; }
 .palco__ponto::before {

@@ -56,30 +56,26 @@ test('palco: avança sozinho a cada 6 s', async ({ page }) => {
   await expect(page.locator('#inicio .hero__peca-nome')).toHaveText(lista[2].nome);
 });
 
-test('palco: botão de pausa e rato por cima param o avanço', async ({ page }) => {
+test('palco: não tem botão de pausa e o rato por cima para o avanço', async ({ page }) => {
   await page.clock.install();
   await page.goto('/');
   const lista = await pecas(page);
-  const pausa = page.locator('#inicio .palco__pausa');
-  await pausa.click();
-  await expect(pausa).toHaveAttribute('aria-pressed', 'true');
-  await page.clock.runFor(20000);
-  await expect(page.locator('#inicio .hero__peca-nome')).toHaveText(lista[0].nome);
-  await pausa.click();
-  await expect(pausa).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('#inicio .palco__pausa')).toHaveCount(0);
   await page.locator('#inicio .palco').hover();
   await page.clock.runFor(20000);
   await expect(page.locator('#inicio .hero__peca-nome')).toHaveText(lista[0].nome);
+  await page.mouse.move(2, 2);
+  await page.clock.runFor(6200);
+  await expect(page.locator('#inicio .hero__peca-nome')).toHaveText(lista[1].nome);
 });
 
-test('palco: com reduzir movimento não avança sozinho e começa em pausa', async ({ page }) => {
+test('palco: com reduzir movimento não avança sozinho', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.clock.install();
   await page.goto('/');
   const lista = await pecas(page);
   await page.clock.runFor(30000);
   await expect(page.locator('#inicio .hero__peca-nome')).toHaveText(lista[0].nome);
-  await expect(page.locator('#inicio .palco__pausa')).toHaveAttribute('aria-pressed', 'true');
 });
 
 test('palco: só a primeira imagem é carregada logo; as outras são lazy', async ({ page }) => {
