@@ -1,3 +1,8 @@
+import { GALERIA } from '../data/galeria.js';
+import { renderGaleria } from './gallery.js';
+
+renderGaleria(document.querySelector('#galeria .galeria__alvo'), GALERIA);
+
 const toggle = document.querySelector('.menu-toggle');
 const menu = document.getElementById('menu-principal');
 
