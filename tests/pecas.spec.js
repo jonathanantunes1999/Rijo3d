@@ -118,3 +118,73 @@ test('noscript tem as mesmas peças que PECAS (sem deriva)', async ({ page }) =>
   });
   expect(r.noscript).toEqual(r.dados);
 });
+
+const DUAS = `[{ id: 'a', nome: 'Peça A', detalhe: 'd', preco: '1 €', cor: '#8b5cf6', etsyUrl: 'https://www.etsy.com/pt/shop/Rijo3D',
+  imagens: [{ src: 'images/pecas/blade-1.webp', alt: 'Primeira' }, { src: 'images/pecas/goku-ssj4-1.webp', alt: 'Segunda' }] }]`;
+
+async function renderizar(page, lista) {
+  await page.evaluate(async (l) => {
+    const { renderPecas } = await import('/js/pecas.js');
+    renderPecas(document.querySelector('#pecas .pecas__alvo'), eval(l));
+  }, lista);
+}
+
+test('lightbox abre, fecha com Esc e com clique fora, e devolve o foco', async ({ page }) => {
+  await page.goto('/');
+  const botao = page.locator('#pecas .peca__abrir').first();
+  await botao.click();
+  const dialogo = page.locator('dialog.lightbox');
+  await expect(dialogo).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(dialogo).toBeHidden();
+  await expect(botao).toBeFocused();
+  await botao.click();
+  await expect(dialogo).toBeVisible();
+  await page.mouse.click(2, 2);
+  await expect(dialogo).toBeHidden();
+});
+
+test('clicar dentro da caixa (margem) não fecha o lightbox', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#pecas .peca__abrir').first().click();
+  const dialogo = page.locator('dialog.lightbox');
+  await dialogo.locator('.lightbox__conteudo').click({ position: { x: 3, y: 3 } });
+  await expect(dialogo).toBeVisible();
+});
+
+test('com 2 imagens há anterior/seguinte e setas do teclado; com 1 não há', async ({ page }) => {
+  await page.goto('/');
+  await renderizar(page, DUAS);
+  await page.locator('#pecas .peca__abrir').first().click();
+  const dialogo = page.locator('dialog.lightbox');
+  const grande = dialogo.locator('img');
+  await expect(grande).toHaveAttribute('alt', 'Primeira');
+  await expect(dialogo.locator('.lightbox__seguinte')).toBeVisible();
+  await page.keyboard.press('ArrowRight');
+  await expect(grande).toHaveAttribute('alt', 'Segunda');
+  await page.keyboard.press('ArrowRight');
+  await expect(grande).toHaveAttribute('alt', 'Primeira');
+  await page.keyboard.press('ArrowLeft');
+  await expect(grande).toHaveAttribute('alt', 'Segunda');
+  await page.keyboard.press('Escape');
+
+  await page.goto('/');
+  await page.locator('#pecas .peca__abrir').first().click();
+  await expect(page.locator('dialog.lightbox .lightbox__seguinte')).toBeHidden();
+  await expect(page.locator('dialog.lightbox .lightbox__anterior')).toBeHidden();
+});
+
+for (const largura of [320, 375, 768, 1280]) {
+  test(`lightbox aberto a ${largura}px cabe no ecrã sem scroll horizontal`, async ({ page }) => {
+    await page.setViewportSize({ width: largura, height: 700 });
+    await page.goto('/');
+    await renderizar(page, DUAS);
+    await page.locator('#pecas .peca__abrir').first().click();
+    await expect(page.locator('dialog.lightbox')).toBeVisible();
+    const { scroll, inner } = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, inner: window.innerWidth }));
+    expect(scroll).toBeLessThanOrEqual(inner);
+    const caixa = await page.locator('dialog.lightbox').boundingBox();
+    expect(caixa.x).toBeGreaterThanOrEqual(0);
+    expect(caixa.x + caixa.width).toBeLessThanOrEqual(largura);
+  });
+}
