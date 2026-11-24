@@ -67,8 +67,46 @@ test('todos os links de WhatsApp usam o mesmo número', async ({ page }) => {
 test('README documenta como acrescentar uma foto', async () => {
   const { readFileSync } = await import('node:fs');
   const readme = readFileSync('README.md', 'utf-8');
-  expect(readme).toContain('data/galeria.js');
-  expect(readme).toContain('images/galeria');
+  expect(readme).toContain('data/pecas.js');
+  expect(readme).toContain('images/pecas');
   expect(readme).toContain('access_key');
   expect(readme).toContain('wa.me');
+});
+
+test('hero mostra confiança, imagem em destaque e identidade violeta/azul', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#inicio')).toContainText('Pintado à mão');
+  await expect(page.locator('#inicio')).toContainText('Envio de Portugal');
+  const img = page.locator('#inicio img');
+  await expect(img).toHaveCount(1);
+  expect((await img.getAttribute('alt')).trim().length).toBeGreaterThan(0);
+  expect(await img.getAttribute('loading')).not.toBe('lazy');
+  expect(await img.evaluate((i) => i.decode().then(() => i.naturalWidth))).toBeGreaterThan(0);
+  const destaque = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--cor-destaque-a').trim().toLowerCase());
+  expect(destaque).toBe('#7c3aed');
+});
+
+test('contactos incluem Instagram e Etsy; secção Quem somos usa o texto da cliente', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#contactos a[href^="https://www.instagram.com/"]')).toHaveCount(1);
+  await expect(page.locator('#contactos a[href^="https://www.etsy.com/pt/shop/Rijo3D"]')).toHaveCount(1);
+  await expect(page.locator('#sobre')).toContainText('transformamos ideias em realidade com tecnologia, criatividade e muita paixão');
+});
+
+test('contraste AA nos pares de cores principais', async ({ page }) => {
+  await page.goto('/');
+  const cores = await page.evaluate(() => {
+    const cs = getComputedStyle(document.documentElement);
+    const g = (n) => cs.getPropertyValue(n).trim();
+    return { fundo: g('--cor-fundo'), superficie: g('--cor-superficie'), texto: g('--cor-texto'), suave: g('--cor-texto-suave'), a: g('--cor-destaque-a'), b: g('--cor-destaque-b'), sobre: g('--cor-sobre-destaque') };
+  });
+  const lum = (hex) => {
+    const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+  const razao = (x, y) => { const [a, b] = [lum(x), lum(y)].sort((m, n) => n - m); return (a + 0.05) / (b + 0.05); };
+  const pares = [['texto', 'fundo'], ['suave', 'fundo'], ['suave', 'superficie'], ['texto', 'superficie'], ['sobre', 'a'], ['sobre', 'b']];
+  for (const [fg, bg] of pares) {
+    expect(razao(cores[fg], cores[bg]), `${fg} sobre ${bg}`).toBeGreaterThanOrEqual(4.5);
+  }
 });

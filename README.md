@@ -2,23 +2,32 @@
 
 Site simples (HTML, CSS e JavaScript), sem passo de build e sem mensalidades. Este guia explica como mudar as coisas mais comuns.
 
-## Acrescentar uma foto à galeria
+## Acrescentar ou mudar uma peça
 
-1. Põe a imagem na pasta `images/galeria/`. Evita `#`, `?` e `%` no nome do ficheiro (espaços e acentos não há problema). Ideal: formato JPG ou WebP, cerca de 1200 px de largura, abaixo de 300 KB.
-2. Abre `data/galeria.js` e acrescenta uma linha à lista:
+1. Põe as fotos na pasta `images/pecas/`. Evita `#`, `?` e `%` no nome do ficheiro (espaços e acentos não há problema). Ideal: formato WebP ou JPG, cerca de 1000 px de largura, abaixo de 150 KB.
+2. Abre `data/pecas.js` e acrescenta um bloco à lista (a primeira imagem é a capa; as outras aparecem ao ampliar):
 
    ```js
-   { src: 'images/galeria/nome-da-foto.jpg', alt: 'Descrição curta do que se vê', legenda: 'Texto que aparece por baixo' },
+   {
+     id: 'nome-curto',
+     nome: 'Nome da peça',
+     detalhe: 'Estátua em resina, pintada à mão, 40 cm.',
+     preco: '199,99 €',
+     etsyUrl: 'https://www.etsy.com/pt/listing/…',
+     cor: '#7c3aed',
+     imagens: [{ src: 'images/pecas/nome-1.webp', alt: 'Descrição curta do que se vê' }],
+   },
    ```
 
-3. Em `index.html`, procura `<noscript>` e acrescenta a mesma foto lá (serve para quem tem o JavaScript desligado).
-4. Grava. O site atualiza sozinho em cerca de um minuto, se estiver ligado ao Cloudflare Pages.
+3. Em `index.html`, procura `<noscript>` na secção Peças e acrescenta o mesmo cartão lá (serve para quem tem o JavaScript desligado). Um teste automático avisa se ficarem diferentes.
+4. Atualiza o preço também na Etsy: o site não lê a loja, são dois sítios.
+5. Grava. O site atualiza sozinho em cerca de um minuto, se estiver ligado ao Cloudflare Pages.
 
-Para remover uma foto, apaga a linha em `data/galeria.js` e o bloco correspondente no `<noscript>`.
+Para remover uma peça, apaga o bloco em `data/pecas.js` e o cartão correspondente no `<noscript>`.
 
 ## Mudar contactos
 
-Em `index.html`, na secção Contactos, edita o email, o telefone e o link de WhatsApp. O número de WhatsApp aparece também no botão da secção Encomendas: procura `wa.me` e muda nos dois sítios, no formato `https://wa.me/351912345678` (indicativo sem `+`, sem espaços).
+Em `index.html`, na secção Contactos, edita o email, o telefone, o link de WhatsApp e o Instagram (procura `TODO-CLIENTE`). O número de WhatsApp aparece também no botão da secção Encomendas: procura `wa.me` e muda nos dois sítios, no formato `https://wa.me/351912345678` (indicativo sem `+`, sem espaços).
 
 ## Formulário de encomendas
 
@@ -42,7 +51,7 @@ Recomendado: Cloudflare Pages ou Netlify, ligados a este repositório do GitHub 
 
 ## Pedir ajuda ao Claude para editar
 
-Podes abrir este repositório com o Claude e pedir coisas como "acrescenta esta foto à galeria com a legenda X" ou "muda o telefone". Depois de cada alteração, confirma no site que tudo está bem.
+Podes abrir este repositório com o Claude e pedir coisas como "acrescenta esta peça ao catálogo com o preço X" ou "muda o telefone". Depois de cada alteração, confirma no site que tudo está bem.
 
 ## Testes (para quem mantém o código)
 

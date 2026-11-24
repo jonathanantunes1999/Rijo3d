@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test('metadados de SEO e partilha existem', async ({ page }) => {
   await page.goto('/');
-  await expect(page).toHaveTitle(/Rijo3d/);
+  await expect(page).toHaveTitle(/Rijo3D/);
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /.{50,}/);
   await expect(page.locator('meta[property="og:title"]')).toHaveCount(1);
   await expect(page.locator('meta[property="og:description"]')).toHaveCount(1);
