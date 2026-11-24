@@ -1,7 +1,9 @@
 import { PECAS } from '../data/pecas.js';
 import { renderPecas } from './pecas.js';
+import { iniciarPalco } from './palco.js';
 
 renderPecas(document.querySelector('#pecas .pecas__alvo'), PECAS);
+iniciarPalco(document.getElementById('inicio'), PECAS);
 
 const toggle = document.querySelector('.menu-toggle');
 const menu = document.getElementById('menu-principal');

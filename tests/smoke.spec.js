@@ -77,8 +77,7 @@ test('hero mostra confiança, imagem em destaque e identidade violeta/azul', asy
   await page.goto('/');
   await expect(page.locator('#inicio')).toContainText('Pintado à mão');
   await expect(page.locator('#inicio')).toContainText('Envio de Portugal');
-  const img = page.locator('#inicio img');
-  await expect(img).toHaveCount(1);
+  const img = page.locator('#inicio img').first();
   expect((await img.getAttribute('alt')).trim().length).toBeGreaterThan(0);
   expect(await img.getAttribute('loading')).not.toBe('lazy');
   expect(await img.evaluate((i) => i.decode().then(() => i.naturalWidth))).toBeGreaterThan(0);

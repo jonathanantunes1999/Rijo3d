@@ -38,6 +38,7 @@
   </header>
   <main>
     <section id="inicio" class="hero">
+      <div class="hero__marca" aria-hidden="true">RIJO3D</div>
       <div class="container hero__grelha">
         <div class="hero__texto-bloco">
           <p class="hero__etiqueta">Rijo3D Figures</p>
@@ -48,16 +49,22 @@
             <a class="btn btn--primario" href="#pecas">Ver peças</a>
             <a class="btn" href="#encomendas">Pedir encomenda</a>
           </div>
+          <div class="hero__peca" hidden>
+            <p class="hero__peca-etiqueta">Em destaque</p>
+            <p class="hero__peca-nome"></p>
+            <p class="hero__peca-preco"></p>
+            <a class="hero__peca-link" href="#pecas">Ver esta peça</a>
+          </div>
           <ul class="hero__confianca">
             <li>Pintado à mão</li>
             <li>Envio de Portugal</li>
             <li>Devoluções em 14 dias</li>
           </ul>
         </div>
-        <figure class="hero__visual">
-          <!-- TODO-CLIENTE: trocar por foto real de uma peça -->
-          <img src="images/pecas/kokushibo-1.webp" alt="Estátua do Kokushibo com espada, rodeado por uma lua roxa" width="1000" height="1257" fetchpriority="high">
-        </figure>
+        <div class="palco" data-palco role="group" aria-roledescription="carrossel" aria-label="Peças em destaque">
+          <!-- TODO-CLIENTE: trocar os renders por fotos reais das peças -->
+          <figure class="palco__estatico"><img src="images/pecas/kokushibo-1.webp" alt="Estátua do Kokushibo com espada, rodeado por uma lua roxa" width="1000" height="1257" fetchpriority="high"></figure>
+        </div>
       </div>
     </section>
     <section id="pecas">
