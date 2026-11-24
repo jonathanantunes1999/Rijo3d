@@ -63,3 +63,12 @@ test('todos os links de WhatsApp usam o mesmo número', async ({ page }) => {
     [...new Set(as.map((a) => new URL(a.href).pathname))]);
   expect(numeros.length).toBe(1);
 });
+
+test('README documenta como acrescentar uma foto', async () => {
+  const { readFileSync } = await import('node:fs');
+  const readme = readFileSync('README.md', 'utf-8');
+  expect(readme).toContain('data/galeria.js');
+  expect(readme).toContain('images/galeria');
+  expect(readme).toContain('access_key');
+  expect(readme).toContain('wa.me');
+});
