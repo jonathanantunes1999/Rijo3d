@@ -147,3 +147,21 @@ h2 { margin: 0 0 var(--espaco-4); font: 700 clamp(1.8rem, 5vw, 2.6rem) / 1.1 var
 }
 .contactos__lista span { color: var(--cor-texto-suave); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.08em; }
 .contactos__lista a { display: inline-block; min-height: 44px; padding-block: 0.4rem; font-weight: 600; overflow-wrap: anywhere; }
+
+/* Formulário */
+#form-encomenda { display: grid; gap: var(--espaco-4); margin-top: var(--espaco-4); }
+.campo { display: grid; gap: var(--espaco-2); }
+.campo label { font-weight: 600; }
+.campo input, .campo textarea {
+  width: 100%; min-height: 48px; padding: 0.7rem var(--espaco-3);
+  background: var(--cor-superficie); color: var(--cor-texto);
+  border: 1px solid var(--cor-borda); border-radius: 10px; font: inherit;
+}
+.campo textarea { resize: vertical; }
+.campo input:focus-visible, .campo textarea:focus-visible { border-color: var(--cor-destaque); }
+.campo [aria-invalid="true"] { border-color: #ff6b6b; }
+.erro { margin: 0; color: #ff8a8a; font-size: 0.95rem; }
+.form__acoes { display: flex; flex-wrap: wrap; gap: var(--espaco-3); }
+.estado { margin: 0; min-height: 1.6em; color: var(--cor-texto-suave); }
+.botcheck { display: none; }
+.btn[disabled] { opacity: 0.6; cursor: wait; }

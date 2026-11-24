@@ -63,7 +63,41 @@
         <p>Aqui vais encontrar alguns dos trabalhos feitos e podes pedir a tua encomenda diretamente por este site.</p>
       </div>
     </section>
-    <section id="encomendas"></section>
+    <section id="encomendas">
+      <div class="container texto-coluna">
+        <h2>Pedir encomenda</h2>
+        <p>Conta-nos o que precisas. Respondemos com o orçamento e os prazos.</p>
+        <!-- TODO-CLIENTE: chave do Web3Forms em access_key; número de WhatsApp igual ao da secção Contactos -->
+        <form id="form-encomenda" method="POST" action="https://api.web3forms.com/submit">
+          <input type="hidden" name="access_key" value="TODO-CLIENTE-WEB3FORMS-KEY">
+          <input type="hidden" name="subject" value="Novo pedido de encomenda — Rijo3d">
+          <input type="hidden" name="from_name" value="Site Rijo3d">
+          <input type="checkbox" name="botcheck" class="botcheck" tabindex="-1" autocomplete="off" hidden>
+          <div class="campo">
+            <label for="nome">Nome</label>
+            <input id="nome" name="nome" type="text" autocomplete="name" required>
+          </div>
+          <div class="campo">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required>
+          </div>
+          <div class="campo">
+            <label for="telefone">Telefone (opcional)</label>
+            <input id="telefone" name="telefone" type="tel" autocomplete="tel">
+          </div>
+          <div class="campo">
+            <label for="descricao">O que queres imprimir?</label>
+            <textarea id="descricao" name="descricao" rows="5" required aria-describedby="erro-descricao"></textarea>
+            <p class="erro" id="erro-descricao" role="alert" hidden>Descreve o que precisas, mesmo que em poucas palavras.</p>
+          </div>
+          <div class="form__acoes">
+            <button class="btn btn--primario" type="submit">Enviar pedido</button>
+            <a class="btn" href="https://wa.me/351000000000?text=Ol%C3%A1!%20Gostava%20de%20pedir%20uma%20encomenda.">Falar por WhatsApp</a>
+          </div>
+          <p id="estado-form" class="estado" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
     <section id="contactos">
       <div class="container">
         <h2>Contactos</h2>
