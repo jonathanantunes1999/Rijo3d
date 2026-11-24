@@ -29,7 +29,7 @@ export function renderGaleria(container, itens) {
     botao.type = 'button';
     botao.setAttribute('aria-label', `Ampliar: ${item.legenda}`);
     const img = document.createElement('img');
-    img.src = item.src;
+    img.src = item.src.split('/').map(encodeURIComponent).join('/');
     img.alt = item.alt;
     img.loading = 'lazy';
     img.width = 800;

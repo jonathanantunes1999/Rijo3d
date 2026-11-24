@@ -25,7 +25,7 @@ test('imagens têm alt não vazio, loading lazy e carregam (incl. nome com espa�
     expect(r.lazy, r.src).toBe('lazy');
     expect(r.ok, `não carregou: ${r.src}`).toBe(true);
   }
-  expect(resultado.some((r) => /[ é]/.test(r.src))).toBe(true);
+  expect(resultado.some((r) => /[ é]/.test(decodeURIComponent(r.src)))).toBe(true);
 });
 
 test('lightbox abre, fecha com Esc e com clique fora, e devolve o foco', async ({ page }) => {
@@ -70,4 +70,27 @@ test('legenda muito longa a 320px não cria scroll horizontal', async ({ page })
   await page.locator('#galeria figure button').first().click();
   const { scroll, inner } = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, inner: window.innerWidth }));
   expect(scroll).toBeLessThanOrEqual(inner);
+});
+
+test('nome de ficheiro com # ou ? é pedido com o caminho codificado', async ({ page }) => {
+  const pedidos = [];
+  await page.route('**/images/galeria/**', (route) => {
+    const url = route.request().url();
+    if (url.includes('%23') || url.includes('%3F')) {
+      pedidos.push(new URL(url).pathname);
+      return route.fulfill({ status: 200, contentType: 'image/svg+xml', body: '<svg xmlns="http://www.w3.org/2000/svg" width="8" height="6"/>' });
+    }
+    return route.continue();
+  });
+  await page.goto('/');
+  await page.evaluate(async () => {
+    const { renderGaleria } = await import('/js/gallery.js');
+    renderGaleria(document.querySelector('#galeria .galeria__alvo'), [
+      { src: 'images/galeria/foto #1 é?.svg', alt: 'x', legenda: 'x' },
+    ]);
+    const img = document.querySelector('#galeria figure img');
+    img.loading = 'eager';
+  });
+  await expect.poll(() => pedidos.length).toBeGreaterThan(0);
+  expect(pedidos[0]).toBe('/images/galeria/foto%20%231%20%C3%A9%3F.svg');
 });

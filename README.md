@@ -4,7 +4,7 @@ Site simples (HTML, CSS e JavaScript), sem passo de build e sem mensalidades. Es
 
 ## Acrescentar uma foto à galeria
 
-1. Põe a imagem na pasta `images/galeria/`. Ideal: formato JPG ou WebP, cerca de 1200 px de largura, abaixo de 300 KB.
+1. Põe a imagem na pasta `images/galeria/`. Evita `#`, `?` e `%` no nome do ficheiro (espaços e acentos não há problema). Ideal: formato JPG ou WebP, cerca de 1200 px de largura, abaixo de 300 KB.
 2. Abre `data/galeria.js` e acrescenta uma linha à lista:
 
    ```js
