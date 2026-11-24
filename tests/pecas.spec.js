@@ -188,3 +188,18 @@ for (const largura of [320, 375, 768, 1280]) {
     expect(caixa.x + caixa.width).toBeLessThanOrEqual(largura);
   });
 }
+
+for (const [l, a] of [[740, 360], [568, 320], [1280, 500]]) {
+  test(`lightbox a ${l}x${a}: navegação e legenda ficam visíveis sem scroll`, async ({ page }) => {
+    await page.setViewportSize({ width: l, height: a });
+    await page.goto('/');
+    await renderizar(page, DUAS);
+    await page.locator('#pecas .peca__abrir').first().click();
+    await expect(page.locator('dialog.lightbox')).toBeVisible();
+    for (const sel of ['.lightbox__fechar', 'figcaption', '.lightbox__seguinte']) {
+      const caixa = await page.locator(`dialog.lightbox ${sel}`).boundingBox();
+      expect(caixa.y, sel).toBeGreaterThanOrEqual(0);
+      expect(caixa.y + caixa.height, sel).toBeLessThanOrEqual(a);
+    }
+  });
+}
