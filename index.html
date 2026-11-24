@@ -4,19 +4,40 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Rijo3d — Impressão 3D</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <header>
-    <nav aria-label="Principal">
-      <a href="#galeria">Trabalhos</a>
-      <a href="#sobre">Quem somos</a>
-      <a href="#encomendas">Encomendas</a>
-      <a href="#contactos">Contactos</a>
-    </nav>
+  <a class="skip-link" href="#galeria">Saltar para o conteúdo</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="marca" href="#inicio" aria-label="Rijo3d, início">Rijo<span>3D</span></a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu-principal">
+        <span class="menu-toggle__label">Menu</span>
+      </button>
+      <nav id="menu-principal" aria-label="Principal">
+        <a href="#galeria">Trabalhos</a>
+        <a href="#sobre">Quem somos</a>
+        <a href="#encomendas">Encomendas</a>
+        <a href="#contactos">Contactos</a>
+      </nav>
+    </div>
   </header>
   <main>
-    <section id="inicio"></section>
+    <section id="inicio" class="hero">
+      <div class="container">
+        <p class="hero__etiqueta">Impressão 3D</p>
+        <!-- TODO-CLIENTE: confirmar título e frase de apoio -->
+        <h1>Ideias que ganham forma, camada a camada.</h1>
+        <p class="hero__texto">Peças impressas em 3D feitas com cuidado, desde protótipos a objetos para o dia a dia.</p>
+        <div class="hero__acoes">
+          <a class="btn btn--primario" href="#encomendas">Pedir encomenda</a>
+          <a class="btn" href="#galeria">Ver trabalhos</a>
+        </div>
+      </div>
+    </section>
     <section id="galeria"></section>
     <section id="sobre"></section>
     <section id="encomendas"></section>
