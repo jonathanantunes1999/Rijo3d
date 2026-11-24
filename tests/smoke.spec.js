@@ -132,3 +132,56 @@ test('contactos: introdução com título e texto de apoio', async ({ page }) =>
   await expect(page.locator('#contactos h2')).toHaveText('Fala connosco');
   await expect(page.locator('#contactos .contactos__intro p').last()).toContainText('peça à medida');
 });
+
+const animacao = (page, sel, pseudo) =>
+  page.locator(sel).evaluate((el, p) => getComputedStyle(el, p).animationName, pseudo);
+
+test('navegação: cada link tem data-texto igual ao texto visível', async ({ page }) => {
+  await page.goto('/');
+  const pares = await page.locator('nav[aria-label="Principal"] a').evaluateAll((as) => as.map((a) => [a.dataset.texto, a.textContent.trim()]));
+  expect(pares.length).toBe(4);
+  for (const [dt, texto] of pares) expect(dt).toBe(texto);
+});
+
+test('navegação: ao passar o rato o texto imprime-se (animação + linha)', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto('/');
+  const link = 'nav[aria-label="Principal"] a:nth-child(2)';
+  expect(await animacao(page, link, '::before')).toBe('none');
+  expect(await animacao(page, link, '::after')).toBe('none');
+  await page.hover(link);
+  expect(await animacao(page, link, '::before')).toBe('imprimir');
+  expect(await animacao(page, link, '::after')).not.toBe('none');
+  await page.mouse.move(2, 2);
+  expect(await animacao(page, link, '::before')).toBe('none');
+});
+
+test('navegação: o foco do teclado também dispara o efeito', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto('/');
+  const link = 'nav[aria-label="Principal"] a:nth-child(1)';
+  await page.focus(link);
+  await page.keyboard.press('Shift+Tab');
+  await page.keyboard.press('Tab');
+  expect(await animacao(page, link, '::before')).toBe('imprimir');
+});
+
+test('navegação: com reduzir movimento não há animação', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto('/');
+  const link = 'nav[aria-label="Principal"] a:nth-child(3)';
+  await page.hover(link);
+  expect(await animacao(page, link, '::before')).toBe('none');
+  expect(await animacao(page, link, '::after')).toBe('none');
+});
+
+test('navegação: texto sobreposto cobre o texto do link sem criar scroll', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto('/');
+  await page.hover('nav[aria-label="Principal"] a:nth-child(4)');
+  const { scroll, inner } = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, inner: window.innerWidth }));
+  expect(scroll).toBeLessThanOrEqual(inner);
+  const cor = await page.locator('nav[aria-label="Principal"] a:nth-child(4)').evaluate((el) => getComputedStyle(el, '::before').content);
+  expect(cor).toContain('Contactos');
+});

@@ -322,3 +322,24 @@ h2 { margin: 0 0 var(--espaco-4); font: 700 clamp(1.8rem, 5vw, 2.6rem) / 1.1 var
 .contacto--principal .contacto__valor { font-size: 1.35rem; }
 .contacto--principal:hover { border-color: transparent; box-shadow: 0 0 40px -6px var(--cor-destaque-a); }
 @media (prefers-reduced-motion: reduce) { .contacto, .contacto__seta { transform: none !important; } }
+
+/* Navegação: o texto "imprime-se" ao passar o rato ou focar (mesmo efeito das peças) */
+#menu-principal a { position: relative; }
+#menu-principal a::before, #menu-principal a::after { position: absolute; pointer-events: none; }
+#menu-principal a::before {
+  content: attr(data-texto); inset: 0; padding: inherit; font: inherit; letter-spacing: inherit; line-height: inherit;
+  background: linear-gradient(90deg, #c4b5fd, #7dd3fc); -webkit-background-clip: text; background-clip: text;
+  color: transparent; clip-path: inset(100% 0 0 0);
+}
+#menu-principal a::after {
+  content: ""; left: var(--espaco-3); right: var(--espaco-3); bottom: 0; height: 2px; opacity: 0;
+  background: linear-gradient(90deg, transparent, #c4b5fd, #7dd3fc, transparent);
+  box-shadow: 0 0 12px 2px var(--cor-destaque-a);
+}
+@media (prefers-reduced-motion: no-preference) {
+  #menu-principal a:hover::before, #menu-principal a:focus-visible::before { animation: imprimir 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  #menu-principal a:hover::after, #menu-principal a:focus-visible::after { animation: linha 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #menu-principal a:hover, #menu-principal a:focus-visible { color: var(--cor-destaque); }
+}
