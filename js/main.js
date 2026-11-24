@@ -72,6 +72,8 @@ form.addEventListener('submit', async (e) => {
 document.addEventListener('click', (e) => {
   const ligacao = e.target.closest('a[data-acao="medida"]');
   if (!ligacao) return;
+  e.preventDefault();
   form.elements.peca.value = ligacao.dataset.peca ?? '';
-  requestAnimationFrame(() => campoDescricao.focus({ preventScroll: true }));
+  document.getElementById('encomendas').scrollIntoView();
+  campoDescricao.focus({ preventScroll: true });
 });
