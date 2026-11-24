@@ -68,3 +68,10 @@ form.addEventListener('submit', async (e) => {
     botao.disabled = false;
   }
 });
+
+document.addEventListener('click', (e) => {
+  const ligacao = e.target.closest('a[data-acao="medida"]');
+  if (!ligacao) return;
+  form.elements.peca.value = ligacao.dataset.peca ?? '';
+  requestAnimationFrame(() => campoDescricao.focus({ preventScroll: true }));
+});

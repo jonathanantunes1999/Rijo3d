@@ -83,3 +83,46 @@ test('sem JavaScript: validação nativa bloqueia envio vazio e o WhatsApp conti
   await expect(page.locator('#encomendas a[href^="https://wa.me/"]')).toHaveCount(1);
   await ctx.close();
 });
+
+test('campo Peça existe, é opcional e tem etiqueta', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#form-encomenda input#peca[name="peca"][type="text"]')).toHaveCount(1);
+  await expect(page.locator('#peca')).not.toHaveAttribute('required', '');
+  await expect(page.locator('label[for="peca"]')).toBeVisible();
+});
+
+test('Pedir à medida preenche o campo Peça e leva ao formulário', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#pecas a[data-acao="medida"]').first().click();
+  await expect(page.locator('#peca')).toHaveValue('Goku Super Saiyan 4');
+  await expect(page.locator('#descricao')).toBeFocused();
+  await expect(page.locator('#form-encomenda')).toBeInViewport();
+});
+
+test('nome com aspas, & e HTML chega ao campo como texto', async ({ page }) => {
+  await page.goto('/');
+  const nome = 'A "B" & <i>C</i>';
+  await page.evaluate(async (n) => {
+    const { renderPecas } = await import('/js/pecas.js');
+    renderPecas(document.querySelector('#pecas .pecas__alvo'), [{ id: 'q', nome: n, detalhe: 'd', preco: '1 €', cor: '#fff', imagens: [] }]);
+  }, nome);
+  await page.locator('#pecas a[data-acao="medida"]').click();
+  await expect(page.locator('#peca')).toHaveValue(nome);
+  await expect(page.locator('#encomendas i')).toHaveCount(0);
+});
+
+test('o nome da peça é enviado no pedido', async ({ page }) => {
+  let corpo = '';
+  await page.route(WEB3FORMS, (route) => {
+    corpo = route.request().postData() ?? '';
+    route.fulfill({ status: 200, contentType: 'application/json', body: '{"success":true}' });
+  });
+  await page.goto('/');
+  await page.locator('#pecas a[data-acao="medida"]').nth(2).click();
+  await page.fill('#nome', 'Ana');
+  await page.fill('#email', 'ana@exemplo.pt');
+  await page.fill('#descricao', 'Versão em azul, por favor.');
+  await page.click('#form-encomenda button[type="submit"]');
+  await expect(page.locator('#estado-form')).toContainText('Pedido enviado');
+  expect(corpo).toContain('Blade, escala 1/6');
+});
