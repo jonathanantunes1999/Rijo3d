@@ -46,3 +46,20 @@ test('menu em mobile abre e fecha com aria-expanded', async ({ page }) => {
   await botao.click();
   await expect(botao).toHaveAttribute('aria-expanded', 'false');
 });
+
+test('contactos usam links válidos e Quem somos tem pelo menos 2 parágrafos', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#contactos a[href^="mailto:"]')).toHaveCount(1);
+  await expect(page.locator('#contactos a[href^="tel:"]')).toHaveCount(1);
+  await expect(page.locator('#contactos a[href^="https://wa.me/"]')).toHaveCount(1);
+  expect(await page.locator('#sobre p').count()).toBeGreaterThanOrEqual(2);
+  await expect(page.locator('#sobre h2')).toBeVisible();
+  await expect(page.locator('#contactos h2')).toBeVisible();
+});
+
+test('todos os links de WhatsApp usam o mesmo número', async ({ page }) => {
+  await page.goto('/');
+  const numeros = await page.locator('a[href^="https://wa.me/"]').evaluateAll((as) =>
+    [...new Set(as.map((a) => new URL(a.href).pathname))]);
+  expect(numeros.length).toBe(1);
+});
