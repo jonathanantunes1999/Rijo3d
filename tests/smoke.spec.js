@@ -133,55 +133,53 @@ test('contactos: introdução com título e texto de apoio', async ({ page }) =>
   await expect(page.locator('#contactos .contactos__intro p').last()).toContainText('peça à medida');
 });
 
-const animacao = (page, sel, pseudo) =>
-  page.locator(sel).evaluate((el, p) => getComputedStyle(el, p).animationName, pseudo);
+const estiloAfter = (page, sel) =>
+  page.locator(sel).evaluate((el) => {
+    const cs = getComputedStyle(el, '::after');
+    return { opacidade: cs.opacity, altura: cs.height, cor: cs.backgroundColor, transicao: cs.transitionDuration };
+  });
 
-test('navegação: cada link tem data-texto igual ao texto visível', async ({ page }) => {
-  await page.goto('/');
-  const pares = await page.locator('nav[aria-label="Principal"] a').evaluateAll((as) => as.map((a) => [a.dataset.texto, a.textContent.trim()]));
-  expect(pares.length).toBe(4);
-  for (const [dt, texto] of pares) expect(dt).toBe(texto);
-});
-
-test('navegação: ao passar o rato o texto imprime-se (animação + linha)', async ({ page }) => {
+test('navegação: um traço simples por baixo ao passar o rato, sem efeito de impressão', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto('/');
   const link = 'nav[aria-label="Principal"] a:nth-child(2)';
-  expect(await animacao(page, link, '::before')).toBe('none');
-  expect(await animacao(page, link, '::after')).toBe('none');
+  expect((await estiloAfter(page, link)).opacidade).toBe('0');
   await page.hover(link);
-  expect(await animacao(page, link, '::before')).toBe('imprimir');
-  expect(await animacao(page, link, '::after')).not.toBe('none');
+  await expect.poll(async () => (await estiloAfter(page, link)).opacidade).toBe('1');
+  const e = await estiloAfter(page, link);
+  expect(e.altura).toBe('2px');
+  expect(e.cor).not.toBe('rgba(0, 0, 0, 0)');
+  expect(await page.locator(link).evaluate((el) => getComputedStyle(el, '::before').content)).toBe('none');
+  expect(await page.locator(link).evaluate((el) => el.hasAttribute('data-texto'))).toBe(false);
   await page.mouse.move(2, 2);
-  expect(await animacao(page, link, '::before')).toBe('none');
+  await expect.poll(async () => (await estiloAfter(page, link)).opacidade).toBe('0');
 });
 
-test('navegação: o foco do teclado também dispara o efeito', async ({ page }) => {
+test('navegação: o foco do teclado mostra o mesmo traço', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto('/');
   const link = 'nav[aria-label="Principal"] a:nth-child(1)';
   await page.focus(link);
   await page.keyboard.press('Shift+Tab');
   await page.keyboard.press('Tab');
-  expect(await animacao(page, link, '::before')).toBe('imprimir');
+  await expect.poll(async () => (await estiloAfter(page, link)).opacidade).toBe('1');
 });
 
-test('navegação: com reduzir movimento não há animação', async ({ page }) => {
+test('navegação: com reduzir movimento o traço aparece sem transição', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto('/');
   const link = 'nav[aria-label="Principal"] a:nth-child(3)';
   await page.hover(link);
-  expect(await animacao(page, link, '::before')).toBe('none');
-  expect(await animacao(page, link, '::after')).toBe('none');
+  const e = await estiloAfter(page, link);
+  expect(e.opacidade).toBe('1');
+  expect(e.transicao).toBe('0s');
 });
 
-test('navegação: texto sobreposto cobre o texto do link sem criar scroll', async ({ page }) => {
+test('navegação: o traço não cria scroll horizontal', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto('/');
   await page.hover('nav[aria-label="Principal"] a:nth-child(4)');
   const { scroll, inner } = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, inner: window.innerWidth }));
   expect(scroll).toBeLessThanOrEqual(inner);
-  const cor = await page.locator('nav[aria-label="Principal"] a:nth-child(4)').evaluate((el) => getComputedStyle(el, '::before').content);
-  expect(cor).toContain('Contactos');
 });
