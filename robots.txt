@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://rijo3d.pt/sitemap.xml
