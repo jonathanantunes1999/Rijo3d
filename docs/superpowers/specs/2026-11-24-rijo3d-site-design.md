@@ -38,3 +38,15 @@ A Rijo3d (impressão 3D) não tem site. O cliente pediu um site direto: galeria 
 
 ## Deixado ao construtor
 Estrutura exata da página, estilo visual dentro da identidade da marca, textos de interface, otimização de imagens, SEO básico.
+
+## Revisão 2026-11-24 (depois de ver a loja Etsy)
+Aprovada pelo Jonathan na conversa.
+
+- **O que mudou:** a Rijo3D já vende na Etsy (6 peças, estátuas de resina pintadas à mão, 179,99 a 299,99 €, envio de Portugal). O site não é loja: é a montra e a marca própria, com compra na Etsy e pedidos à medida pelo formulário.
+- **Catálogo:** a galeria genérica dá lugar a cartões de peça (foto, nome, tamanho, preço, "Comprar na Etsy", "Pedir à medida"). Cada peça tem uma lista de imagens (por agora uma); a ampliação passa entre elas.
+- **Pedir à medida:** o botão leva o nome da peça para o campo "Peça" do formulário.
+- **Identidade:** violeta e azul elétrico sobre preto, a partir do banner da Etsy (logótipo hexagonal RJ, "RiJo 3D Figures"). O laranja provisório sai.
+- **Textos:** usar só o que a cliente já escreveu (anúncio da loja: "Na Rijo3D, transformamos ideias em realidade com tecnologia, criatividade e muita paixão.") e factos confirmados na Etsy (resina, pintado à mão, envio de Portugal, devoluções em 14 dias).
+- **Anti-objetivo novo:** não publicar imagens de terceiros sem a cliente confirmar que tem direito a usá-las; as cinco imagens atuais são renders dos criadores (marcas Tanuki Figures e Patreon visíveis) e servem só de protótipo.
+- **Aviso registado:** as peças são personagens licenciadas; o risco de propriedade intelectual é da cliente.
+- **Em aberto:** ficheiro do logótipo, @ do Instagram, ligações individuais de cada listagem Etsy, fotos reais das peças, foto e dados da réplica F1 (89,99 €) que não veio no pacote.
