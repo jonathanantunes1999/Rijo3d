@@ -55,7 +55,52 @@ function criarGaleria(peca) {
     principal.disabled = true;
     img.alt = '';
   }
-  principal.addEventListener('click', () => { if (imagens.length) abrirLightbox(peca, indice); });
+  // Lupa (só com rato): um quadrado segue o cursor e mostra a zona ampliada.
+  const lupa = el('div', 'galeria-peca__lupa');
+  lupa.hidden = true;
+  lupa.setAttribute('aria-hidden', 'true');
+  palco.append(lupa);
+  let lupaAtiva = false;
+
+  function atualizarLupa(e) {
+    const nw = img.naturalWidth;
+    const nh = img.naturalHeight;
+    if (!nw || !nh) return;
+    const r = principal.getBoundingClientRect();
+    const x = e.clientX - r.left;
+    const y = e.clientY - r.top;
+    const escala = Math.max(r.width / nw, r.height / nh);
+    const rw = nw * escala;
+    const rh = nh * escala;
+    const ox = (r.width - rw) / 2;
+    const oy = (r.height - rh) / 2;
+    const zoom = Math.min(3, Math.max(1.6, (nw / rw) * 1.15));
+    const lado = lupa.offsetWidth;
+    const esquerda = Math.min(Math.max(x - lado / 2, 0), r.width - lado);
+    const topo = Math.min(Math.max(y - lado / 2, 0), r.height - lado);
+    lupa.style.backgroundImage = `url("${img.currentSrc || img.src}")`;
+    lupa.style.backgroundSize = `${rw * zoom}px ${rh * zoom}px`;
+    lupa.style.backgroundPosition = `${lado / 2 - (x - ox) * zoom}px ${lado / 2 - (y - oy) * zoom}px`;
+    lupa.style.transform = `translate(${esquerda}px, ${topo}px)`;
+  }
+  function desativarLupa() {
+    lupaAtiva = false;
+    lupa.hidden = true;
+    principal.classList.remove('galeria-peca__principal--lupa');
+  }
+  principal.addEventListener('pointerenter', (e) => {
+    if (e.pointerType !== 'mouse' || !imagens.length) return;
+    lupaAtiva = true;
+    lupa.hidden = false;
+    principal.classList.add('galeria-peca__principal--lupa');
+    atualizarLupa(e);
+  });
+  principal.addEventListener('pointermove', (e) => { if (lupaAtiva) atualizarLupa(e); });
+  principal.addEventListener('pointerleave', desativarLupa);
+  principal.addEventListener('click', () => {
+    desativarLupa();
+    if (imagens.length) abrirLightbox(peca, indice);
+  });
 
   if (imagens.length > 1) {
     const anterior = botaoIcone('galeria-peca__anterior', 'Foto anterior', '‹');

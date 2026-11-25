@@ -383,3 +383,13 @@ h2 { margin: 0 0 var(--espaco-4); font: 700 clamp(1.8rem, 5vw, 2.6rem) / 1.1 var
 .outra__nome { font-weight: 600; overflow-wrap: anywhere; }
 .outra__preco { color: var(--cor-texto-suave); }
 @media (prefers-reduced-motion: reduce) { .outra img { transition: none; } }
+
+/* Lupa na foto principal */
+.galeria-peca__principal--lupa { cursor: none; }
+.galeria-peca__lupa {
+  position: absolute; top: 0; left: 0; z-index: 5; width: 180px; height: 180px; pointer-events: none;
+  border: 2px solid var(--cor-peca, var(--cor-destaque)); border-radius: 12px; background-color: #000; background-repeat: no-repeat;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 8px 30px rgba(0, 0, 0, 0.6), 0 0 24px -4px var(--cor-peca, var(--cor-destaque));
+  will-change: transform;
+}
+.galeria-peca__lupa[hidden] { display: none; }

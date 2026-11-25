@@ -151,3 +151,106 @@ test('?peca= com HTML no endereço entra no campo como texto', async ({ page }) 
   await expect(page.locator('#peca')).toHaveValue('<i>x</i>');
   await expect(page.locator('#encomendas i')).toHaveCount(0);
 });
+
+async function geometria(page) {
+  return page.locator('.galeria-peca__principal').evaluate((b) => {
+    const img = b.querySelector('img');
+    const r = b.getBoundingClientRect();
+    const escala = Math.max(r.width / img.naturalWidth, r.height / img.naturalHeight);
+    return { x: r.x, y: r.y, w: r.width, h: r.height, rw: img.naturalWidth * escala };
+  });
+}
+
+test('lupa: aparece ao passar o rato na foto e segue o cursor', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/peca.html?id=blade');
+  const lupa = page.locator('.galeria-peca__lupa');
+  await expect(lupa).toBeHidden();
+  const g = await geometria(page);
+  await page.mouse.move(g.x + g.w / 2, g.y + g.h / 2);
+  await expect(lupa).toBeVisible();
+  const caixa = await lupa.boundingBox();
+  expect(Math.abs(caixa.x + caixa.width / 2 - (g.x + g.w / 2))).toBeLessThanOrEqual(2);
+  expect(Math.abs(caixa.y + caixa.height / 2 - (g.y + g.h / 2))).toBeLessThanOrEqual(2);
+  await page.mouse.move(g.x + g.w / 2 + 60, g.y + g.h / 2 + 40);
+  const caixa2 = await lupa.boundingBox();
+  expect(Math.round(caixa2.x - caixa.x)).toBe(60);
+  expect(Math.round(caixa2.y - caixa.y)).toBe(40);
+  await page.mouse.move(2, 2);
+  await expect(lupa).toBeHidden();
+});
+
+test('lupa: mostra a zona certa ampliada (centro e deslocação)', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/peca.html?id=homem-aranha');
+  const g = await geometria(page);
+  await page.mouse.move(g.x + g.w / 2, g.y + g.h / 2);
+  const lupa = page.locator('.galeria-peca__lupa');
+  const ler = () => lupa.evaluate((l) => {
+    const cs = getComputedStyle(l);
+    const [bw] = cs.backgroundSize.split(' ').map(parseFloat);
+    const [px, py] = cs.backgroundPosition.split(' ').map(parseFloat);
+    return { bw, px, py, L: l.offsetWidth, img: cs.backgroundImage };
+  });
+  const a = await ler();
+  expect(a.img).toContain('homem-aranha-1.webp');
+  const Z = a.bw / g.rw;
+  expect(Z).toBeGreaterThan(1.4);
+  expect(Math.abs(a.px - (a.L - a.bw) / 2)).toBeLessThanOrEqual(2);
+  await page.mouse.move(g.x + g.w / 2 + 50, g.y + g.h / 2);
+  const b = await ler();
+  expect(Math.abs((b.px - a.px) - -50 * Z)).toBeLessThanOrEqual(2);
+});
+
+test('lupa: troca de imagem com a galeria e esconde-se ao clicar para ampliar', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await montar(page);
+  let g = await geometria(page);
+  await page.mouse.move(g.x + g.w / 2, g.y + g.h / 2);
+  expect(await page.locator('.galeria-peca__lupa').evaluate((l) => getComputedStyle(l).backgroundImage)).toContain('blade-1.webp');
+  await page.locator('.galeria-peca__seguinte').click();
+  await page.mouse.move(g.x + g.w / 2 + 5, g.y + g.h / 2);
+  expect(await page.locator('.galeria-peca__lupa').evaluate((l) => getComputedStyle(l).backgroundImage)).toContain('goku-ssj4-1.webp');
+  await page.locator('.galeria-peca__principal').click();
+  await expect(page.locator('dialog.lightbox')).toBeVisible();
+  await expect(page.locator('.galeria-peca__lupa')).toBeHidden();
+});
+
+test('lupa: o cursor do sistema esconde-se enquanto a lupa está ativa', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/peca.html?id=blade');
+  const g = await geometria(page);
+  await page.mouse.move(g.x + g.w / 2, g.y + g.h / 2);
+  expect(await page.locator('.galeria-peca__principal').evaluate((b) => getComputedStyle(b).cursor)).toBe('none');
+  await page.mouse.move(2, 2);
+  expect(await page.locator('.galeria-peca__principal').evaluate((b) => getComputedStyle(b).cursor)).toBe('zoom-in');
+});
+
+test('lupa: toque não ativa a lupa', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/peca.html?id=blade');
+  await page.locator('.galeria-peca__principal').evaluate((b) => {
+    const r = b.getBoundingClientRect();
+    for (const tipo of ['pointerenter', 'pointermove']) {
+      b.dispatchEvent(new PointerEvent(tipo, { pointerType: 'touch', clientX: r.x + 50, clientY: r.y + 50, bubbles: true }));
+    }
+  });
+  await expect(page.locator('.galeria-peca__lupa')).toBeHidden();
+});
+
+test('lupa: fica dentro da foto junto aos bordos, sem scroll horizontal', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/peca.html?id=blade');
+  const g = await geometria(page);
+  await page.mouse.move(g.x + 20, g.y + 20);
+  const palco = await page.locator('.galeria-peca__palco').boundingBox();
+  const l = await page.locator('.galeria-peca__lupa').boundingBox();
+  expect(l.x).toBeGreaterThanOrEqual(palco.x - 1);
+  expect(l.y).toBeGreaterThanOrEqual(palco.y - 1);
+  await page.mouse.move(g.x + g.w - 20, g.y + g.h - 20);
+  const l2 = await page.locator('.galeria-peca__lupa').boundingBox();
+  expect(l2.x + l2.width).toBeLessThanOrEqual(palco.x + palco.width + 1);
+  expect(l2.y + l2.height).toBeLessThanOrEqual(palco.y + palco.height + 1);
+  const { scroll, inner } = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, inner: window.innerWidth }));
+  expect(scroll).toBeLessThanOrEqual(inner);
+});
