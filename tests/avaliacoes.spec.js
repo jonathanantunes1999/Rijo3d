@@ -1,29 +1,52 @@
 import { test, expect } from '@playwright/test';
 
-test('sem avaliações reais a secção não aparece', async ({ page }) => {
+test('modo demo (por defeito): aparecem os exemplos sem parâmetros, marcados como exemplo', async ({ page }) => {
   await page.goto('/');
-  const n = await page.evaluate(async () => (await import('/data/avaliacoes.js')).AVALIACOES.length);
-  expect(n).toBe(0);
-  await expect(page.locator('#avaliacoes')).toBeHidden();
-  await expect(page.locator('#avaliacoes .avaliacao')).toHaveCount(0);
-});
-
-test('exemplos só aparecem com ?demo=avaliacoes e vêm marcados como exemplo', async ({ page }) => {
-  await page.goto('/?demo=avaliacoes');
   const cartoes = page.locator('#avaliacoes .avaliacao');
   await expect(page.locator('#avaliacoes')).toBeVisible();
   await expect(cartoes).toHaveCount(4);
   const pecas = await page.evaluate(async () => (await import('/data/pecas.js')).PECAS.map((p) => p.nome));
-  const mencionadas = await page.locator('#avaliacoes .avaliacao__peca').allTextContents();
-  for (const m of mencionadas) expect(pecas).toContain(m);
-  const estrelas = await page.locator('#avaliacoes .avaliacao__estrelas').evaluateAll((e) => e.map((x) => x.getAttribute('aria-label')));
+  for (const m of await page.locator('#avaliacoes .avaliacao__peca').allTextContents()) expect(pecas).toContain(m);
+  const estrelas = await cartoes.locator('.avaliacao__estrelas').evaluateAll((e) => e.map((x) => x.getAttribute('aria-label')));
   expect(new Set(estrelas).size).toBeGreaterThan(1);
   for (let i = 0; i < 4; i++) {
     await expect(cartoes.nth(i).locator('.avaliacao__exemplo')).toHaveText('Exemplo');
     await expect(cartoes.nth(i).locator('.avaliacao__estrelas')).toHaveAttribute('aria-label', /^[1-5] em 5 estrelas$/);
   }
-  await page.goto('/?demo=outra-coisa');
+});
+
+test('?demo=off esconde os exemplos, e sem modo demo nem parâmetro não há exemplos', async ({ page }) => {
+  await page.goto('/?demo=off');
   await expect(page.locator('#avaliacoes')).toBeHidden();
+  await expect(page.locator('#avaliacoes .avaliacao')).toHaveCount(0);
+  await expect(page.locator('nav[aria-label="Principal"] a[href="#avaliacoes"]')).toHaveCount(0);
+  const r = await page.evaluate(async () => {
+    const { avaliacoesParaMostrar } = await import('/js/avaliacoes.js');
+    return {
+      semNada: avaliacoesParaMostrar([], '', false).length,
+      comParametro: avaliacoesParaMostrar([], '?demo=avaliacoes', false).length,
+      desligado: avaliacoesParaMostrar([], '?demo=off', true).length,
+      comReais: avaliacoesParaMostrar([{ nome: 'A', texto: 't', estrelas: 5 }], '', true).filter((a) => a.exemplo).length,
+    };
+  });
+  expect(r).toEqual({ semNada: 0, comParametro: 4, desligado: 0, comReais: 0 });
+});
+
+test('o menu ganha o link Avaliações quando a secção está visível', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto('/');
+  const link = page.locator('nav[aria-label="Principal"] a[href="#avaliacoes"]');
+  await expect(link).toHaveCount(1);
+  await expect(link).toHaveText('Avaliações');
+  await link.click();
+  await expect(page.locator('#avaliacoes')).toBeInViewport();
+});
+
+test('rodapé avisa que é versão de demonstração enquanto o modo demo está ligado', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('.rodape__demo')).toHaveText('Versão de demonstração');
+  await page.goto('/?demo=off');
+  await expect(page.locator('.rodape__demo')).toBeHidden();
 });
 
 test('avaliações reais não têm marca de exemplo, mostram média e tratam o texto como texto', async ({ page }) => {

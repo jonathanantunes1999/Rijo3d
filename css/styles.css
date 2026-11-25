@@ -414,3 +414,6 @@ h2 { margin: 0 0 var(--espaco-4); font: 700 clamp(1.8rem, 5vw, 2.6rem) / 1.1 var
 .avaliacao__texto { margin: 0; flex: 1; overflow-wrap: anywhere; line-height: 1.6; }
 .avaliacao__autor { display: grid; gap: 0.1rem; margin: 0; overflow-wrap: anywhere; }
 .avaliacao__peca { color: var(--cor-texto-suave); font-size: 0.9rem; }
+
+.rodape__demo { margin-top: var(--espaco-2); font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cor-destaque); }
+.rodape__demo[hidden] { display: none; }

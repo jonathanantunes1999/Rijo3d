@@ -35,7 +35,7 @@ A secção "O que dizem os clientes" só aparece quando há avaliações verdade
 { nome: 'Ana R.', texto: 'O que o cliente escreveu', estrelas: 5, peca: 'Blade, escala 1/6' },
 ```
 
-Só avaliações reais, escritas por clientes que autorizaram. Inventar avaliações é proibido na União Europeia. Para veres o desenho antes de haver avaliações, abre o site com `?demo=avaliacoes` no fim do endereço: aparecem 3 cartões marcados "Exemplo", que nunca aparecem sem esse endereço.
+Só avaliações reais, escritas por clientes que autorizaram. Inventar avaliações é proibido na União Europeia. Enquanto `MODO_DEMO` estiver `true` em `data/config.js`, o site mostra 4 avaliações de exemplo marcadas "Exemplo" e a nota "Versão de demonstração" no rodapé. **Antes de publicar o site a sério, muda `MODO_DEMO` para `false`.** Com `?demo=off` no fim do endereço vês já como fica sem exemplos.
 
 ## Mudar contactos
 

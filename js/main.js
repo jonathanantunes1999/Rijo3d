@@ -3,11 +3,15 @@ import { renderPecas } from './pecas.js';
 import { iniciarPalco } from './palco.js';
 import './menu.js';
 import { AVALIACOES } from '../data/avaliacoes.js';
-import { renderAvaliacoes, avaliacoesParaMostrar } from './avaliacoes.js';
+import { renderAvaliacoes, avaliacoesParaMostrar, sincronizarMenu, modoDemoAtivo } from './avaliacoes.js';
 
 renderPecas(document.querySelector('#pecas .pecas__alvo'), PECAS);
 iniciarPalco(document.getElementById('inicio'), PECAS);
-renderAvaliacoes(document.getElementById('avaliacoes'), avaliacoesParaMostrar(AVALIACOES));
+const secaoAvaliacoes = document.getElementById('avaliacoes');
+renderAvaliacoes(secaoAvaliacoes, avaliacoesParaMostrar(AVALIACOES));
+sincronizarMenu(secaoAvaliacoes);
+const notaDemo = document.querySelector('.rodape__demo');
+if (notaDemo) notaDemo.hidden = !modoDemoAtivo(AVALIACOES);
 
 export function textoVazio(valor) {
   return valor.trim() === '';

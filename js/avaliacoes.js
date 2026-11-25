@@ -1,3 +1,5 @@
+import { MODO_DEMO } from '../data/config.js';
+
 // Exemplos inventados SÓ para demonstração (endereço ?demo=avaliacoes), sempre marcados "Exemplo". Não são clientes reais.
 const EXEMPLOS = [
   { nome: 'Ana R.', texto: 'A pintura está incrível, os detalhes do casaco e do sangue ficaram ainda melhores ao vivo do que nas fotos. Já está na prateleira em destaque.', estrelas: 5, peca: 'Blade, escala 1/6', exemplo: true },
@@ -60,7 +62,25 @@ export function renderAvaliacoes(secao, lista) {
   secao.hidden = false;
 }
 
-export function avaliacoesParaMostrar(reais, procura = location.search) {
+export function avaliacoesParaMostrar(reais, procura = location.search, modoDemo = MODO_DEMO) {
   if (reais.length) return reais;
-  return new URLSearchParams(procura).get('demo') === 'avaliacoes' ? EXEMPLOS : [];
+  const demo = new URLSearchParams(procura).get('demo');
+  if (demo === 'off') return [];
+  return modoDemo || demo === 'avaliacoes' ? EXEMPLOS : [];
+}
+
+export function sincronizarMenu(secao) {
+  const menu = document.getElementById('menu-principal');
+  if (!menu || !secao) return;
+  menu.querySelector('a[href="#avaliacoes"]')?.remove();
+  if (secao.hidden) return;
+  const link = document.createElement('a');
+  link.href = '#avaliacoes';
+  link.textContent = 'Avaliações';
+  menu.querySelector('a[href="#pecas"]')?.after(link);
+}
+
+export function modoDemoAtivo(reais, procura = location.search, modoDemo = MODO_DEMO) {
+  if (new URLSearchParams(procura).get('demo') === 'off') return false;
+  return !reais.length && (modoDemo || new URLSearchParams(procura).get('demo') === 'avaliacoes');
 }

@@ -11,7 +11,7 @@ test('página tem as 5 secções e navegação', async ({ page }) => {
   const hrefs = await page.locator('nav[aria-label="Principal"] a').evaluateAll((as) => as.map((a) => a.getAttribute('href')));
   expect(hrefs.length).toBeGreaterThanOrEqual(4);
   for (const h of hrefs) {
-    expect(SECOES).toContain(h.replace('#', ''));
+    expect([...SECOES, 'avaliacoes']).toContain(h.replace('#', ''));
   }
 });
 
