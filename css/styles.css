@@ -393,3 +393,24 @@ h2 { margin: 0 0 var(--espaco-4); font: 700 clamp(1.8rem, 5vw, 2.6rem) / 1.1 var
   will-change: transform;
 }
 .galeria-peca__lupa[hidden] { display: none; }
+
+/* Avaliações */
+.avaliacoes[hidden] { display: none; }
+.avaliacoes__resumo { margin: 0 0 var(--espaco-5); color: var(--cor-texto-suave); font-size: 1.1rem; }
+.avaliacoes h2 { margin-bottom: var(--espaco-3); }
+.avaliacoes__grelha { display: grid; gap: var(--espaco-4); grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); margin-top: var(--espaco-4); }
+.avaliacao {
+  position: relative; display: flex; flex-direction: column; gap: var(--espaco-3); min-width: 0; padding: var(--espaco-4);
+  border: 1px solid var(--cor-borda); border-radius: var(--raio); background: var(--cor-superficie);
+}
+.avaliacao--exemplo { border-style: dashed; border-color: var(--cor-destaque); }
+.avaliacao__exemplo {
+  position: absolute; top: var(--espaco-3); right: var(--espaco-3); padding: 0.15rem 0.6rem; border-radius: 999px;
+  background: var(--cor-destaque-a); color: var(--cor-sobre-destaque); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+}
+.avaliacao__estrelas { margin: 0; font-size: 1.25rem; letter-spacing: 0.1em; line-height: 1; }
+.avaliacao__estrelas-cheias { background: linear-gradient(90deg, #c4b5fd, #7dd3fc); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.avaliacao__estrelas-vazias { color: var(--cor-borda); }
+.avaliacao__texto { margin: 0; flex: 1; overflow-wrap: anywhere; line-height: 1.6; }
+.avaliacao__autor { display: grid; gap: 0.1rem; margin: 0; overflow-wrap: anywhere; }
+.avaliacao__peca { color: var(--cor-texto-suave); font-size: 0.9rem; }

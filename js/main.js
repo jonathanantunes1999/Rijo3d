@@ -2,9 +2,12 @@ import { PECAS } from '../data/pecas.js';
 import { renderPecas } from './pecas.js';
 import { iniciarPalco } from './palco.js';
 import './menu.js';
+import { AVALIACOES } from '../data/avaliacoes.js';
+import { renderAvaliacoes, avaliacoesParaMostrar } from './avaliacoes.js';
 
 renderPecas(document.querySelector('#pecas .pecas__alvo'), PECAS);
 iniciarPalco(document.getElementById('inicio'), PECAS);
+renderAvaliacoes(document.getElementById('avaliacoes'), avaliacoesParaMostrar(AVALIACOES));
 
 export function textoVazio(valor) {
   return valor.trim() === '';

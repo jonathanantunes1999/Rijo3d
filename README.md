@@ -27,6 +27,16 @@ Site simples (HTML, CSS e JavaScript), sem passo de build e sem mensalidades. Es
 
 Para remover uma peça, apaga o bloco em `data/pecas.js` e o cartão correspondente no `<noscript>`.
 
+## Avaliações de clientes
+
+A secção "O que dizem os clientes" só aparece quando há avaliações verdadeiras. Para acrescentar uma, abre `data/avaliacoes.js` e junta uma linha à lista:
+
+```js
+{ nome: 'Ana R.', texto: 'O que o cliente escreveu', estrelas: 5, peca: 'Blade, escala 1/6' },
+```
+
+Só avaliações reais, escritas por clientes que autorizaram. Inventar avaliações é proibido na União Europeia. Para veres o desenho antes de haver avaliações, abre o site com `?demo=avaliacoes` no fim do endereço: aparecem 3 cartões marcados "Exemplo", que nunca aparecem sem esse endereço.
+
 ## Mudar contactos
 
 Em `index.html`, na secção Contactos, edita o email, o telefone, o link de WhatsApp e o Instagram (procura `TODO-CLIENTE`). O número de WhatsApp aparece também no botão da secção Encomendas: procura `wa.me` e muda nos dois sítios, no formato `https://wa.me/351912345678` (indicativo sem `+`, sem espaços).
