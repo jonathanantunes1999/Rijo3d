@@ -19,9 +19,11 @@ Site simples (HTML, CSS e JavaScript), sem passo de build e sem mensalidades. Es
    },
    ```
 
+   Para acrescentar mais fotos a uma peça, põe-nas em `images/pecas/` e acrescenta mais linhas à lista `imagens`: aparecem na página da peça (`peca.html?id=nome-curto`) como miniaturas e setas. `ficha` é a tabela de dados da página da peça (material, tamanho…).
 3. Em `index.html`, procura `<noscript>` na secção Peças e acrescenta o mesmo cartão lá (serve para quem tem o JavaScript desligado). Um teste automático avisa se ficarem diferentes.
 4. Atualiza o preço também na Etsy: o site não lê a loja, são dois sítios.
-5. Grava. O site atualiza sozinho em cerca de um minuto, se estiver ligado ao Cloudflare Pages.
+5. Em `sitemap.xml`, acrescenta a linha `https://rijo3d.pt/peca.html?id=nome-curto` (um teste automático avisa se faltar).
+6. Grava. O site atualiza sozinho em cerca de um minuto, se estiver ligado ao Cloudflare Pages.
 
 Para remover uma peça, apaga o bloco em `data/pecas.js` e o cartão correspondente no `<noscript>`.
 

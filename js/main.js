@@ -1,29 +1,10 @@
 import { PECAS } from '../data/pecas.js';
 import { renderPecas } from './pecas.js';
 import { iniciarPalco } from './palco.js';
+import './menu.js';
 
 renderPecas(document.querySelector('#pecas .pecas__alvo'), PECAS);
 iniciarPalco(document.getElementById('inicio'), PECAS);
-
-const toggle = document.querySelector('.menu-toggle');
-const menu = document.getElementById('menu-principal');
-
-function definirMenu(aberto) {
-  toggle.setAttribute('aria-expanded', String(aberto));
-  menu.classList.toggle('aberto', aberto);
-}
-
-toggle.addEventListener('click', () => {
-  definirMenu(toggle.getAttribute('aria-expanded') !== 'true');
-});
-
-menu.addEventListener('click', (e) => {
-  if (e.target.closest('a')) definirMenu(false);
-});
-
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') definirMenu(false);
-});
 
 export function textoVazio(valor) {
   return valor.trim() === '';
@@ -79,3 +60,6 @@ document.addEventListener('click', (e) => {
   document.getElementById('encomendas').scrollIntoView();
   campoDescricao.focus({ preventScroll: true });
 });
+
+const pecaDoEndereco = new URLSearchParams(location.search).get('peca');
+if (pecaDoEndereco) form.elements.peca.value = pecaDoEndereco.slice(0, 120);

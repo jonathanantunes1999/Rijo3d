@@ -50,3 +50,8 @@ Aprovada pelo Jonathan na conversa.
 - **Anti-objetivo novo:** não publicar imagens de terceiros sem a cliente confirmar que tem direito a usá-las; as cinco imagens atuais são renders dos criadores (marcas Tanuki Figures e Patreon visíveis) e servem só de protótipo.
 - **Aviso registado:** as peças são personagens licenciadas; o risco de propriedade intelectual é da cliente.
 - **Em aberto:** ficheiro do logótipo, @ do Instagram, ligações individuais de cada listagem Etsy, fotos reais das peças, foto e dados da réplica F1 (89,99 €) que não veio no pacote.
+
+## Revisão 2: página da peça (2026-11-25)
+- Cada peça tem a sua página `peca.html?id=…`, desenhada por JavaScript a partir de `data/pecas.js`: galeria com miniaturas e setas (várias imagens por peça), ficha, preço, "Comprar na Etsy" e "Pedir à medida" (leva o nome ao formulário por `index.html?peca=…#encomendas`), e outras peças.
+- Nos cartões do catálogo, imagem, título e "Ver peça" abrem a página; o zoom (lightbox) passou para a imagem grande da página.
+- Limitação conhecida: sem JavaScript a página da peça só mostra um aviso, e as etiquetas de partilha (og:) são as gerais do site, não as da peça.

@@ -1,8 +1,6 @@
-const INTERVALO = 6000;
+import { caminho } from './util.js';
 
-function caminho(src) {
-  return src.split('/').map(encodeURIComponent).join('/');
-}
+const INTERVALO = 6000;
 
 function botao(classe, rotulo, texto) {
   const b = document.createElement('button');
@@ -78,6 +76,8 @@ export function iniciarPalco(raiz, pecas) {
     const nome = info.querySelector('.hero__peca-nome');
     nome.textContent = peca.nome;
     info.querySelector('.hero__peca-preco').textContent = peca.preco;
+    const link = info.querySelector('.hero__peca-link');
+    link.href = `peca.html?id=${encodeURIComponent(peca.id)}`;
     if (!reduzir) {
       info.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 450, easing: 'ease-out' });
     }

@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 const ativo = (page) => page.locator('#inicio .palco__slide[data-ativo="true"]');
 
 async function pecas(page) {
-  return page.evaluate(async () => (await import('/data/pecas.js')).PECAS.map((p) => ({ nome: p.nome, preco: p.preco, cor: p.cor })));
+  return page.evaluate(async () => (await import('/data/pecas.js')).PECAS.map((p) => ({ id: p.id, nome: p.nome, preco: p.preco, cor: p.cor })));
 }
 
 test('palco: um slide por peça e só um ativo', async ({ page }) => {
@@ -43,7 +43,7 @@ test('palco: cor e informação acompanham a peça ativa', async ({ page }) => {
   await expect(page.locator('#inicio .hero__peca-preco')).toHaveText(lista[1].preco);
   const cor = await page.locator('#inicio').evaluate((el) => el.style.getPropertyValue('--cor-palco').trim());
   expect(cor).toBe(lista[1].cor);
-  await expect(page.locator('#inicio .hero__peca a[href="#pecas"]')).toBeVisible();
+  await expect(page.locator('#inicio .hero__peca-link')).toHaveAttribute('href', `peca.html?id=${lista[1].id}`);
 });
 
 test('palco: avança sozinho a cada 6 s', async ({ page }) => {
