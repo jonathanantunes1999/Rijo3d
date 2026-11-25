@@ -1,8 +1,9 @@
-// Exemplos só para ver o desenho (endereço ?demo=avaliacoes). Não são clientes reais.
+// Exemplos inventados SÓ para demonstração (endereço ?demo=avaliacoes), sempre marcados "Exemplo". Não são clientes reais.
 const EXEMPLOS = [
-  { nome: 'Nome do cliente', texto: 'Texto de exemplo para ver como fica uma avaliação. Aqui aparece o comentário do cliente sobre a peça.', estrelas: 5, peca: 'Nome da peça', exemplo: true },
-  { nome: 'Nome do cliente', texto: 'Segundo texto de exemplo, um pouco mais curto.', estrelas: 5, peca: 'Nome da peça', exemplo: true },
-  { nome: 'Nome do cliente', texto: 'Terceiro texto de exemplo. Serve só para testar o desenho dos cartões e a quebra de linhas em ecrãs pequenos.', estrelas: 4, peca: 'Nome da peça', exemplo: true },
+  { nome: 'Ana R.', texto: 'A pintura está incrível, os detalhes do casaco e do sangue ficaram ainda melhores ao vivo do que nas fotos. Já está na prateleira em destaque.', estrelas: 5, peca: 'Blade, escala 1/6', exemplo: true },
+  { nome: 'Miguel S.', texto: 'Peça enorme e muito bem acabada. Chegou bem protegida e sem nada partido. Recomendo.', estrelas: 5, peca: 'Goku Super Saiyan 4', exemplo: true },
+  { nome: 'Inês C.', texto: 'Pedi uma versão com outra cor e correu tudo bem, responderam sempre depressa. Ficou exatamente como imaginei.', estrelas: 5, peca: 'Kokushibo, escala 1/6', exemplo: true },
+  { nome: 'Tiago M.', texto: 'Muito detalhe na serpente e no rosto. Demorou um pouco mais do que esperava a chegar, mas valeu a pena.', estrelas: 4, peca: 'Orochimaru, escala 1/6', exemplo: true },
 ];
 
 function el(tag, classe, texto) {

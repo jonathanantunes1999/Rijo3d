@@ -12,8 +12,13 @@ test('exemplos só aparecem com ?demo=avaliacoes e vêm marcados como exemplo', 
   await page.goto('/?demo=avaliacoes');
   const cartoes = page.locator('#avaliacoes .avaliacao');
   await expect(page.locator('#avaliacoes')).toBeVisible();
-  await expect(cartoes).toHaveCount(3);
-  for (let i = 0; i < 3; i++) {
+  await expect(cartoes).toHaveCount(4);
+  const pecas = await page.evaluate(async () => (await import('/data/pecas.js')).PECAS.map((p) => p.nome));
+  const mencionadas = await page.locator('#avaliacoes .avaliacao__peca').allTextContents();
+  for (const m of mencionadas) expect(pecas).toContain(m);
+  const estrelas = await page.locator('#avaliacoes .avaliacao__estrelas').evaluateAll((e) => e.map((x) => x.getAttribute('aria-label')));
+  expect(new Set(estrelas).size).toBeGreaterThan(1);
+  for (let i = 0; i < 4; i++) {
     await expect(cartoes.nth(i).locator('.avaliacao__exemplo')).toHaveText('Exemplo');
     await expect(cartoes.nth(i).locator('.avaliacao__estrelas')).toHaveAttribute('aria-label', /^[1-5] em 5 estrelas$/);
   }
