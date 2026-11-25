@@ -254,3 +254,39 @@ test('lupa: fica dentro da foto junto aos bordos, sem scroll horizontal', async 
   const { scroll, inner } = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, inner: window.innerWidth }));
   expect(scroll).toBeLessThanOrEqual(inner);
 });
+
+test('Homem-Aranha tem 6 fotos, todas distintas, com alt e a carregar', async ({ page }) => {
+  await page.goto('/peca.html?id=homem-aranha');
+  const minis = page.locator('.galeria-peca__mini');
+  await expect(minis).toHaveCount(6);
+  const info = await page.evaluate(async () => {
+    const { PECAS } = await import('/data/pecas.js');
+    const imagens = PECAS.find((p) => p.id === 'homem-aranha').imagens;
+    const resultados = await Promise.all(imagens.map(async (im) => {
+      const i = new Image();
+      i.src = im.src.split('/').map(encodeURIComponent).join('/');
+      await i.decode().catch(() => {});
+      return { src: im.src, alt: im.alt, ok: i.naturalWidth > 0, w: i.naturalWidth };
+    }));
+    return resultados;
+  });
+  expect(new Set(info.map((r) => r.src)).size).toBe(6);
+  for (const r of info) {
+    expect(r.ok, `não carregou: ${r.src}`).toBe(true);
+    expect(r.alt.trim().length, r.src).toBeGreaterThan(10);
+  }
+  expect(new Set(info.map((r) => r.alt)).size).toBe(6);
+});
+
+test('Homem-Aranha: passar pelas 6 fotos com a seta chega a todas e volta à primeira', async ({ page }) => {
+  await page.goto('/peca.html?id=homem-aranha');
+  const principal = page.locator('.galeria-peca__principal img');
+  const vistos = new Set([await principal.getAttribute('src')]);
+  for (let i = 0; i < 5; i++) {
+    await page.locator('.galeria-peca__seguinte').click();
+    vistos.add(await principal.getAttribute('src'));
+  }
+  expect(vistos.size).toBe(6);
+  await page.locator('.galeria-peca__seguinte').click();
+  expect(await principal.getAttribute('src')).toBe([...vistos][0]);
+});

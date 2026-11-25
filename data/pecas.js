@@ -21,7 +21,14 @@ export const PECAS = [
     etsyUrl: 'https://www.etsy.com/pt/listing/4614267229/spider-man-action-figure-3d-printed',
     cor: '#5b6cf0',
     ficha: [['Material', 'Resina'], ['Acabamento', 'Pintado à mão'], ['Altura', '40 cm'], ['Largura', '15 cm'], ['Extra', 'Busto grátis']],
-    imagens: [{ src: 'images/pecas/homem-aranha-1.webp', alt: 'Estátua do Homem-Aranha a balançar numa teia' }],
+    imagens: [
+      { src: 'images/pecas/homem-aranha-1.webp', alt: 'Estátua do Homem-Aranha a balançar numa teia' },
+      { src: 'images/pecas/homem-aranha-2.webp', alt: 'Homem-Aranha suspenso sobre uma base com engenhos de luz verde e chamas laranja, vista geral' },
+      { src: 'images/pecas/homem-aranha-3.webp', alt: 'Homem-Aranha em salto, vista geral de outro ângulo, sobre base de fumo e rocha' },
+      { src: 'images/pecas/homem-aranha-4.webp', alt: 'Pormenor da cara do Homem-Aranha, com a pintura da máscara' },
+      { src: 'images/pecas/homem-aranha-5.webp', alt: 'Pormenor das costas do Homem-Aranha, com o símbolo de aranha' },
+      { src: 'images/pecas/homem-aranha-6.webp', alt: 'Homem-Aranha com uma maçã ao lado para comparar o tamanho' },
+    ],
   },
   {
     id: 'blade',
